@@ -15,27 +15,29 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
-import controller.CtrButton;
+import controller.CtrGame;
 
 public class FieldSquare extends JPanel {
 	private static final long serialVersionUID = 8412514173336013671L;
-	private static CtrButton ctrButton;
+
 	private JButton button;
 	private JLabel label;
+	private CtrGame ctrGame;
+
 	private int valueSquare;
-	private boolean isOpen;
-	private boolean isMarked;
+	private int isOpen;
+	private int isMarked;
 
 	private ArrayList<FieldSquare> vizinhos;
 
 	/*
 	 * Fonte Padrao btnNewButton_1.setFont(new Font("Dialog", Font.BOLD, 14));
 	 */
-	public FieldSquare(int valueSquare) {
+	public FieldSquare(int valueSquare, CtrGame ctrGame) {
 		super();
 		this.valueSquare = valueSquare;
-		this.isOpen = false;
-		// CtrButton ctrButton = this.ctrButton;
+		this.isOpen = 0;
+		this.ctrGame = ctrGame;
 
 		FieldSquare panel = this;
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -47,21 +49,25 @@ public class FieldSquare extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					if (!panel.isMarked) {
-						panel.openPanel();
+					if (!panel.isMarked()) {
+						ctrGame.openPanel(panel);
 						if (panel.valueSquare < 0) {
-							getCtrButton().loseGame();
+							ctrGame.loseGame();
 						}
-						getCtrButton().testWin();
+
 					}
 				} else if (SwingUtilities.isRightMouseButton(e)) {
-					if (panel.isMarked) {
+					if (panel.isMarked()) {
 						button.setBackground(Color.GRAY);
+						panel.flipMarked();
 					} else {
-						button.setBackground(Color.DARK_GRAY);
+						if (ctrGame.getMarkedQtd() < ctrGame.getMinesQtd()) {
+							button.setBackground(Color.DARK_GRAY);
+							panel.flipMarked();
+						}
 					}
-					panel.flipMarked();
 				}
+				ctrGame.testWin();
 			}
 		});
 
@@ -70,7 +76,11 @@ public class FieldSquare extends JPanel {
 
 		panel.add(button);
 
-		this.label = new JLabel(Integer.toString(valueSquare));
+		if (this.valueSquare >= 0)
+			this.label = new JLabel(Integer.toString(valueSquare));
+		else
+			this.label = new JLabel("*");
+
 		JLabel label = this.label;
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -90,39 +100,35 @@ public class FieldSquare extends JPanel {
 	}
 
 	public boolean isOpen() {
-		return this.isOpen;
+		if (this.isOpen == 0)
+			return false;
+		else
+			return true;
+	}
+
+	public void setOpen(boolean open) {
+		if (open) {
+			this.isOpen = 1;
+		} else {
+			this.isOpen = 0;
+		}
+	}
+
+	public boolean isMarked() {
+		if (this.isMarked == 0)
+			return false;
+		else
+			return true;
 	}
 
 	public void flipMarked() {
-		if (this.isMarked) {
-			this.isMarked = false;
+		if (this.isMarked == 0) {
+			this.ctrGame.countMarked();
+			this.isMarked = 1;
 		} else {
-			this.isMarked = true;
+			this.ctrGame.countUnmarked();
+			this.isMarked = 0;
 		}
-	}
-
-	public void openPanel() {
-		if (!this.isOpen) {
-			this.isOpen = true;
-			CardLayout cl = (CardLayout) this.getLayout();
-			cl.next(this);
-
-			if (this.valueSquare == 0) {
-				for (FieldSquare i : vizinhos) {
-					if (i.getValueSquare() == 0) {
-						i.openPanel();
-					}
-				}
-			}
-		}
-	}
-
-	public static CtrButton getCtrButton() {
-		return ctrButton;
-	}
-
-	public static void setCtrButton(CtrButton ctrButton) {
-		FieldSquare.ctrButton = ctrButton;
 	}
 
 }

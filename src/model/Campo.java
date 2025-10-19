@@ -3,7 +3,7 @@ package model;
 public class Campo {
 
 	private int[][] field;
-	private int size;
+	private int difficulty;
 	private int minesQtd;
 
 	public int[][] getField() {
@@ -18,28 +18,29 @@ public class Campo {
 		return minesQtd;
 	}
 
-	public int getSize() {
-		return size;
+	public int getDifficulty() {
+		return difficulty;
 	}
 
 	public static void main(String[] args) {
 		int size = 25;
-		Campo campo = new Campo(size);
+		Campo campo = new Campo(size, size * (size / 5));
 		System.out.println(campo.toString());
 	}
 
-	public Campo(int size) {
+	public Campo(int difficulty, int minesQtd) {
 		super();
-		this.field = new int[size][size];
-		this.size = size;
-		this.minesQtd = size * (size / 5);
+		this.field = new int[difficulty][difficulty];
+		this.difficulty = difficulty;
+		this.minesQtd = minesQtd;
 		populate();
 	}
 
 	private void populate() {
 		for (int i = 0; i < this.minesQtd; i++) {
-			int x = randInt(size - 1);
-			int y = randInt(size - 1);
+			int x = randInt(difficulty - 1);
+			int y = randInt(difficulty - 1);
+
 			if (this.field[x][y] >= 0) {
 				this.field[x][y] = -1;
 				setMine(x, y);
@@ -57,7 +58,7 @@ public class Campo {
 				int j = y + l;
 
 				if (k >= 0 && j >= 0) {
-					if (k < this.size && j < this.size) {
+					if (k < this.difficulty && j < this.difficulty) {
 						if (this.field[k][j] >= 0)
 							this.field[k][j]++;
 					}
