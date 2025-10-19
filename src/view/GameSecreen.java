@@ -3,12 +3,12 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,42 +20,46 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 import controller.CtrGame;
+import model.MarkedIcon;
 
 public class GameSecreen {
 	private JFrame frmCampoMinado;
 
-	private int windowHeigth;
-	private int windowLength;
 	private CtrGame ctrGame;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameSecreen window = new GameSecreen(5, 150, 255);
-					// GameSecreen window = new GameSecreen(10, 300, 400);
-					// GameSecreen window = new GameSecreen(15, 450, 550);
-					// GameSecreen window = new GameSecreen(20, 600, 700);
-					window.frmCampoMinado.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
+	// public static void main(String[] args, int dificuldade) {
+	// EventQueue.invokeLater(new Runnable() {
+	// public void run() {
+	// try {
+	// GameSecreen window = new GameSecreen(5, 150, 255);
+	// GameSecreen window = new GameSecreen(10, 300, 400);
+	// GameSecreen window = new GameSecreen(15, 450, 550);
+	// GameSecreen window = new GameSecreen(20, 600, 700);
+	// GameSecreen window = new GameSecreen(25, 750, 850);
+	// window.frmCampoMinado.setVisible(true);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// });
+	// }
 
 	/**
 	 * Create the application.
 	 */
-	public GameSecreen(int fieldSize, int windowLength, int windowHeigth) {
-		this.windowHeigth = windowHeigth;
-		this.windowLength = windowLength;
+	private int windowLength;
+	private int windowHeigth;
 
+	public GameSecreen(int fieldSize, int windowLength, int windowHeigth) {
 		this.ctrGame = new CtrGame(this, fieldSize);
-		initialize();
+		this.windowLength = windowLength;
+		this.windowHeigth = windowHeigth;
+		this.ctrGame.playStart();
+		initialize(fieldSize);
 	}
 
 	/**
@@ -63,15 +67,15 @@ public class GameSecreen {
 	 */
 	private JLabel MarkedMines;
 	private JLabel totalMines;
-	private FieldSquare[][] Field;
+	private FieldSquare[][] field;
 
-	private void initialize() {
+	private void initialize(int fieldSize) {
 		frmCampoMinado = new JFrame();
 		frmCampoMinado.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		frmCampoMinado.setResizable(false);
-		frmCampoMinado.setTitle("Campo Minado");
+		frmCampoMinado.setTitle(this.label(fieldSize));
 		// Set tamanho da caixa
-		// frmCampoMinado.setBounds(100, 100, windowLength, windowHeigth);
+		// frmCampoMinado.setBounds(100, 100, 750, 850);
 		centerFrame(this.frmCampoMinado, this.windowLength, this.windowHeigth);
 
 		frmCampoMinado.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,9 +95,23 @@ public class GameSecreen {
 		JToolBar BarraOpcoes = new JToolBar();
 		topOption.add(BarraOpcoes);
 
-		JButton BtnNew = new JButton("New");
+		JButton BtnNew = new JButton(" Reset ");
+		BtnNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ctrGame.restartGame();
+			}
+		});
 		BtnNew.setMargin(new Insets(0, 0, 0, 0));
 		BarraOpcoes.add(BtnNew);
+
+		JButton btnMainMenu = new JButton(" Menu ");
+		btnMainMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctrGame.closeWindow();
+			}
+		});
+		btnMainMenu.setMargin(new Insets(0, 0, 0, 0));
+		BarraOpcoes.add(btnMainMenu);
 
 		JSeparator separator_2 = new JSeparator();
 		Top.add(separator_2, BorderLayout.WEST);
@@ -116,8 +134,7 @@ public class GameSecreen {
 		JPanel panel = new JPanel();
 		topInfo.add(panel);
 
-		JLabel iconCenter = new JLabel("*");
-		iconCenter.setFont(new Font("Dialog", Font.BOLD, 20));
+		MarkedIcon iconCenter = new MarkedIcon("!");
 		panel.add(iconCenter);
 
 		JSeparator separator_3 = new JSeparator();
@@ -139,12 +156,29 @@ public class GameSecreen {
 		frmCampoMinado.getContentPane().add(Center, BorderLayout.CENTER);
 		Center.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		Field = this.ctrGame.generateButtons();
+		field = this.ctrGame.generateButtons();
 
-		for (int i = 0; i < Field.length; i++) {
-			for (int j = 0; j < Field.length; j++) {
-				Center.add(Field[i][j]);
+		for (int i = 0; i < fieldSize; i++) {
+			for (int j = 0; j < fieldSize; j++) {
+				Center.add(field[i][j]);
 			}
+		}
+	}
+
+	private String label(int fieldSize) {
+		switch (fieldSize) {
+		case 5:
+			return "Campo Minado - 5X5";
+		case 10:
+			return "Campo Minado - 10X10";
+		case 15:
+			return "Campo Minado - 15X15";
+		case 20:
+			return "Campo Minado - 20X20";
+		case 25:
+			return "Campo Minado - 25X25";
+		default:
+			return "Campo Minado";
 		}
 	}
 
@@ -176,10 +210,10 @@ public class GameSecreen {
 	}
 
 	public FieldSquare[][] getField() {
-		return Field;
+		return this.field;
 	}
 
 	public void setField(FieldSquare[][] field) {
-		Field = field;
+		this.field = field;
 	}
 }

@@ -3,11 +3,11 @@ package controller;
 import java.awt.CardLayout;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
-import model.Campo;
 import view.FieldSquare;
+import view.GameMessages;
 import view.GameSecreen;
 
 public class CtrGame {
@@ -46,33 +46,16 @@ public class CtrGame {
 			winGame();
 	}
 
-	public void winGame() {
-		JOptionPane.showMessageDialog(this.gameSecreen.getFrmCampoMinado(), "CONGRATULATIONS - YOU WIN!",
-				"Campo Minado", JOptionPane.ERROR_MESSAGE);
-		this.gameSecreen.getFrmCampoMinado().dispose();
-	}
-
-	public void loseGame() {
-		FieldSquare[][] field = this.gameSecreen.getField();
-
-		for (FieldSquare[] i : field)
-			for (FieldSquare j : i)
-				openPanel(j);
-
-		JOptionPane.showMessageDialog(this.gameSecreen.getFrmCampoMinado(), "GAME OVER - YOU LOSE!", "Campo Minado",
-				JOptionPane.ERROR_MESSAGE);
-		this.gameSecreen.getFrmCampoMinado().dispose();
-
-	}
-
 	public void openPanel(FieldSquare square) {
 		if (!square.isOpen()) {
+			CardLayout cl = (CardLayout) square.getLayout();
 
 			if (square.isMarked()) {
+				cl.next(square);
 				square.flipMarked();
 			}
+
 			square.setOpen(true);
-			CardLayout cl = (CardLayout) square.getLayout();
 			cl.next(square);
 
 			if (square.getValueSquare() == 0) {
@@ -91,7 +74,6 @@ public class CtrGame {
 
 		totalMines.setText(Integer.toString(this.minesQtd - this.markedQtd));
 		totalMines.validate();
-		System.out.println(totalMines.getText());
 
 		MarkedMines.setText(Integer.toString(this.markedQtd));
 		MarkedMines.validate();
@@ -109,7 +91,7 @@ public class CtrGame {
 	}
 
 	public FieldSquare[][] generateButtons() {
-		Campo field = new Campo(this.difficulty, this.minesQtd);
+		CtrCampo field = new CtrCampo(this.difficulty, this.minesQtd);
 		FieldSquare[][] buttons = new FieldSquare[this.difficulty][this.difficulty];
 
 		for (int i = 0; i < this.difficulty; i++)
@@ -151,4 +133,58 @@ public class CtrGame {
 		System.out.println(field.toString());
 		return buttons;
 	}
+
+	private void flipBlockFrame() {
+		JFrame frame = this.gameSecreen.getFrmCampoMinado();
+		if (frame.isEnabled()) {
+			frame.setEnabled(false);
+		} else {
+			frame.setEnabled(true);
+		}
+	}
+
+	private void winGame() {
+		flipBlockFrame();
+		BuzzerBiip bepp = new BuzzerBiip();
+		bepp.playWin();
+		GameMessages gameMessages = new GameMessages(difficulty);
+		gameMessages.winGame(this.gameSecreen.getFrmCampoMinado());
+		flipBlockFrame();
+	}
+
+	public void restartGame() {
+		flipBlockFrame();
+		GameMessages gameMessages = new GameMessages(difficulty);
+		gameMessages.restartGame(this.gameSecreen.getFrmCampoMinado());
+		flipBlockFrame();
+	}
+
+	public void closeWindow() {
+		flipBlockFrame();
+		GameMessages gameMessages = new GameMessages(difficulty);
+		gameMessages.closeWindow(this.gameSecreen.getFrmCampoMinado());
+		flipBlockFrame();
+	}
+
+	public void loseGame() {
+		flipBlockFrame();
+		BuzzerBiip bepp = new BuzzerBiip();
+		bepp.playLose();
+		FieldSquare[][] field = this.gameSecreen.getField();
+
+		for (FieldSquare[] i : field)
+			for (FieldSquare j : i)
+				openPanel(j);
+
+		GameMessages gameMessages = new GameMessages(difficulty);
+		gameMessages.loseGame(this.gameSecreen.getFrmCampoMinado());
+		flipBlockFrame();
+
+	}
+
+	public void playStart() {
+		BuzzerBiip bepp = new BuzzerBiip();
+		bepp.playStart();
+	}
+
 }

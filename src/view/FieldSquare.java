@@ -1,26 +1,23 @@
 package view;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
 import controller.CtrGame;
+import model.MarkedButton;
+import model.MineButton;
 
 public class FieldSquare extends JPanel {
 	private static final long serialVersionUID = 8412514173336013671L;
 
-	private JButton button;
+	private MineButton mineButton;
+	private MarkedButton markedButton;
 	private JLabel label;
 	private CtrGame ctrGame;
 
@@ -43,38 +40,14 @@ public class FieldSquare extends JPanel {
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setLayout(new CardLayout(0, 0));
 
-		this.button = new JButton("");
-		JButton button = this.button;
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					if (!panel.isMarked()) {
-						ctrGame.openPanel(panel);
-						if (panel.valueSquare < 0) {
-							ctrGame.loseGame();
-						}
+		this.markedButton = new MarkedButton(panel, ctrGame);
+		panel.add(markedButton);
 
-					}
-				} else if (SwingUtilities.isRightMouseButton(e)) {
-					if (panel.isMarked()) {
-						button.setBackground(Color.GRAY);
-						panel.flipMarked();
-					} else {
-						if (ctrGame.getMarkedQtd() < ctrGame.getMinesQtd()) {
-							button.setBackground(Color.DARK_GRAY);
-							panel.flipMarked();
-						}
-					}
-				}
-				ctrGame.testWin();
-			}
-		});
+		this.mineButton = new MineButton("", panel, ctrGame);
+		panel.add(mineButton);
 
-		button.setMargin(new Insets(7, 7, 7, 7));
-		button.setFont(new Font("Dialog", Font.BOLD, 14));
-
-		panel.add(button);
+		CardLayout cl = (CardLayout) panel.getLayout();
+		cl.next(panel);
 
 		if (this.valueSquare >= 0)
 			this.label = new JLabel(Integer.toString(valueSquare));
@@ -131,4 +104,15 @@ public class FieldSquare extends JPanel {
 		}
 	}
 
+	public void nextCard() {
+		CardLayout cl = (CardLayout) this.getLayout();
+		cl.next(this);
+
+	}
+
+	public void previousCard() {
+		CardLayout cl = (CardLayout) this.getLayout();
+		cl.previous(this);
+
+	}
 }

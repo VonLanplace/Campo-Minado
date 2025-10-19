@@ -1,6 +1,6 @@
-package model;
+package controller;
 
-public class Campo {
+public class CtrCampo {
 
 	private int[][] field;
 	private int difficulty;
@@ -22,13 +22,13 @@ public class Campo {
 		return difficulty;
 	}
 
-	public static void main(String[] args) {
-		int size = 25;
-		Campo campo = new Campo(size, size * (size / 5));
-		System.out.println(campo.toString());
-	}
+	// public static void main(String[] args) {
+	// int size = 25;
+	// CtrCampo campo = new CtrCampo(size, size * (size / 5));
+	// System.out.println(campo.toString());
+	// }
 
-	public Campo(int difficulty, int minesQtd) {
+	public CtrCampo(int difficulty, int minesQtd) {
 		super();
 		this.field = new int[difficulty][difficulty];
 		this.difficulty = difficulty;
