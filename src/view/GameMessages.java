@@ -17,6 +17,24 @@ public class GameMessages {
 		this.difficulty = difficulty;
 	}
 
+	public void helpWindow(JFrame frame) {
+		// Load Window
+		frame.setVisible(false);
+		HelpWindow helpWindow = new HelpWindow();
+		JFrame newWindow = helpWindow.getFrame();
+
+		// Adiciona listener para quando o frame fechar
+		newWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				frame.setVisible(true);
+			}
+		});
+
+		newWindow.setVisible(true);
+
+	}
+
 	public void closeWindow(JFrame frame) {
 		// Load Window
 		int opc = JOptionPane.showConfirmDialog(frame, "Tem certeza que quer voltar ao menu?", "Return Menu",
@@ -43,10 +61,10 @@ public class GameMessages {
 
 	public void winGame(JFrame frame) {
 		int opc = JOptionPane.showConfirmDialog(frame, "Parabens você encontrou todas as mina, quer jogar denovo?",
-				"Congratulations!!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				"Congratulations!!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		// Load Window
-		if (opc == JOptionPane.OK_OPTION) {
+		if (opc == JOptionPane.YES_OPTION) {
 			GameSecreen gameSecreen = criarGameSecreenPorDificuldade(this.difficulty / 5);
 			JFrame newFrame = gameSecreen.getFrmCampoMinado();
 
@@ -59,10 +77,10 @@ public class GameMessages {
 	public void loseGame(JFrame frame) {
 
 		int opc = JOptionPane.showConfirmDialog(frame, "Você quer tentar novamente?", "Try Again?",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 
 		// Load Window
-		if (opc == JOptionPane.OK_OPTION) {
+		if (opc == JOptionPane.YES_OPTION) {
 			GameSecreen gameSecreen = criarGameSecreenPorDificuldade(this.difficulty / 5);
 			JFrame newFrame = gameSecreen.getFrmCampoMinado();
 

@@ -187,4 +187,11 @@ public class CtrGame {
 		bepp.playStart();
 	}
 
+	public void helpWindow() {
+		flipBlockFrame();
+		GameMessages gameMessages = new GameMessages(difficulty);
+		gameMessages.helpWindow(this.gameSecreen.getFrmCampoMinado());
+		flipBlockFrame();
+	}
+
 }

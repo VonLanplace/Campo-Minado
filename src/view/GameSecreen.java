@@ -113,6 +113,15 @@ public class GameSecreen {
 		btnMainMenu.setMargin(new Insets(0, 0, 0, 0));
 		BarraOpcoes.add(btnMainMenu);
 
+		JButton btnHelp = new JButton("Help");
+		btnHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctrGame.helpWindow();
+			}
+		});
+		btnHelp.setMargin(new Insets(0, 0, 0, 0));
+		BarraOpcoes.add(btnHelp);
+
 		JSeparator separator_2 = new JSeparator();
 		Top.add(separator_2, BorderLayout.WEST);
 
