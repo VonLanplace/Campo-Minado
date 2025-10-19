@@ -13,7 +13,7 @@
 ## CLIQUE DIREITO
 
 - Primeiro clique: Marca com "!" - indica mina suspeita
-- Terceiro clique: Remove marcação
+- Segundo clique: Remove marcação
 
 ## ENTENDA OS NÚMEROS
 
@@ -23,7 +23,7 @@
 
 ## CONTADORES
 - **Minas (Esquerdo):** Quantas minas faltam marcar
-- **Tempo (Direito):** Quanto tempo você levou na partida
+- **Marcadas (Direito):** Quantas minas já foram marcadas
 
 ## COMECE PELOS CANTOS
 
