@@ -43,7 +43,7 @@ public class Main {
 	 * Create the application.
 	 */
 	public Main() {
-		this.ctrMain = new CtrMain(this);
+		this.ctrMain = new CtrMain();
 		initialize();
 	}
 
@@ -53,7 +53,7 @@ public class Main {
 	private void initialize() {
 		frmCampoMinado = new JFrame();
 		frmCampoMinado.setTitle("Campo Minado - Main Menu");
-		frmCampoMinado.setBounds(100, 100, 214, 235);
+		frmCampoMinado.setBounds(100, 100, 220, 250);
 		centerFrame(frmCampoMinado, frmCampoMinado.getWidth(), frmCampoMinado.getHeight());
 		frmCampoMinado.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -76,7 +76,7 @@ public class Main {
 		MainButtons btnTut = new MainButtons("Extra Facil - 5X5");
 		btnTut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrMain.startGame(1);
+				ctrMain.startGame(1, frmCampoMinado);
 			}
 		});
 		midPanel.add(btnTut, "cell 3 0,alignx center,aligny center");
@@ -84,7 +84,7 @@ public class Main {
 		MainButtons btnEasy = new MainButtons("Facil - 10X10");
 		btnEasy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrMain.startGame(2);
+				ctrMain.startGame(2, frmCampoMinado);
 			}
 		});
 		midPanel.add(btnEasy, "cell 3 1,alignx center,aligny center");
@@ -92,7 +92,7 @@ public class Main {
 		MainButtons btnMed = new MainButtons("Medio - 15X15");
 		btnMed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrMain.startGame(3);
+				ctrMain.startGame(3, frmCampoMinado);
 			}
 		});
 		midPanel.add(btnMed, "cell 3 2,alignx center,aligny center");
@@ -100,7 +100,7 @@ public class Main {
 		MainButtons btnDif = new MainButtons("Dificil - 20X20");
 		btnDif.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrMain.startGame(4);
+				ctrMain.startGame(4, frmCampoMinado);
 			}
 		});
 		midPanel.add(btnDif, "cell 3 3,alignx center,aligny center");
@@ -108,7 +108,7 @@ public class Main {
 		MainButtons btnImp = new MainButtons("Impossivel - 25X25");
 		btnImp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrMain.startGame(5);
+				ctrMain.startGame(5, frmCampoMinado);
 			}
 		});
 		midPanel.add(btnImp, "cell 3 4,alignx center,aligny center");

@@ -52,7 +52,7 @@ public class GameMessages {
 
 		// Load Window
 		if (opc == JOptionPane.OK_OPTION) {
-			GameSecreen gameSecreen = criarGameSecreenPorDificuldade(this.difficulty / 5);
+			GameSecreen gameSecreen = createGameScreen(this.difficulty / 5);
 			JFrame newFrame = gameSecreen.getFrmCampoMinado();
 
 			newWindow(newFrame, frame);
@@ -65,7 +65,7 @@ public class GameMessages {
 
 		// Load Window
 		if (opc == JOptionPane.YES_OPTION) {
-			GameSecreen gameSecreen = criarGameSecreenPorDificuldade(this.difficulty / 5);
+			GameSecreen gameSecreen = createGameScreen(this.difficulty / 5);
 			JFrame newFrame = gameSecreen.getFrmCampoMinado();
 
 			newWindow(newFrame, frame);
@@ -81,7 +81,7 @@ public class GameMessages {
 
 		// Load Window
 		if (opc == JOptionPane.YES_OPTION) {
-			GameSecreen gameSecreen = criarGameSecreenPorDificuldade(this.difficulty / 5);
+			GameSecreen gameSecreen = createGameScreen(this.difficulty / 5);
 			JFrame newFrame = gameSecreen.getFrmCampoMinado();
 
 			newWindow(newFrame, frame);
@@ -119,8 +119,8 @@ public class GameMessages {
 		frame.setVisible(true);
 	}
 
-	private static GameSecreen criarGameSecreenPorDificuldade(int difficulty) {
+	private static GameSecreen createGameScreen(int difficulty) {
 		CtrMain ctrMain = new CtrMain();
-		return ctrMain.criarGameSecreenPorDificuldade(difficulty);
+		return ctrMain.createGameScreen(difficulty);
 	}
 }

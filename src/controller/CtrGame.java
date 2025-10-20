@@ -8,18 +8,14 @@ import javax.swing.JLabel;
 
 import view.FieldSquare;
 import view.GameMessages;
-import view.GameSecreen;
 
 public class CtrGame {
 	private int difficulty;
 	private int minesQtd;
 	private int markedQtd;
 
-	private GameSecreen gameSecreen;
-
-	public CtrGame(GameSecreen gameSecreen, int difficulty) {
+	public CtrGame(int difficulty) {
 		super();
-		this.gameSecreen = gameSecreen;
 		this.difficulty = difficulty;
 		this.minesQtd = difficulty * (difficulty / 5);
 		this.markedQtd = 0;
@@ -33,8 +29,7 @@ public class CtrGame {
 		return markedQtd;
 	}
 
-	public void testWin() {
-		FieldSquare[][] field = this.gameSecreen.getField();
+	public void testWin(JFrame frmCampoMinado, FieldSquare[][] field) {
 		int correctMarked = 0;
 
 		for (FieldSquare[] i : field)
@@ -43,7 +38,7 @@ public class CtrGame {
 					correctMarked++;
 
 		if (correctMarked == this.minesQtd)
-			winGame();
+			winGame(frmCampoMinado);
 	}
 
 	public void openPanel(FieldSquare square) {
@@ -68,26 +63,24 @@ public class CtrGame {
 		}
 	}
 
-	public void count() {
-		JLabel MarkedMines = this.gameSecreen.getMarkedMines();
-		JLabel totalMines = this.gameSecreen.getTotalMines();
+	public void count(JLabel markedMines, JLabel totalMines) {
 
 		totalMines.setText(Integer.toString(this.minesQtd - this.markedQtd));
 		totalMines.validate();
 
-		MarkedMines.setText(Integer.toString(this.markedQtd));
-		MarkedMines.validate();
+		markedMines.setText(Integer.toString(this.markedQtd));
+		markedMines.validate();
 	}
 
-	public void countUnmarked() {
+	public void countUnmarked(JLabel markedMines, JLabel totalMines) {
 		this.markedQtd--;
-		count();
+		count(markedMines, totalMines);
 
 	}
 
-	public void countMarked() {
+	public void countMarked(JLabel markedMines, JLabel totalMines) {
 		this.markedQtd++;
-		count();
+		count(markedMines, totalMines);
 	}
 
 	public FieldSquare[][] generateButtons() {
@@ -134,51 +127,49 @@ public class CtrGame {
 		return buttons;
 	}
 
-	private void flipBlockFrame() {
-		JFrame frame = this.gameSecreen.getFrmCampoMinado();
-		if (frame.isEnabled()) {
-			frame.setEnabled(false);
+	private void flipBlockFrame(JFrame frmCampoMinado) {
+		if (frmCampoMinado.isEnabled()) {
+			frmCampoMinado.setEnabled(false);
 		} else {
-			frame.setEnabled(true);
+			frmCampoMinado.setEnabled(true);
 		}
 	}
 
-	private void winGame() {
-		flipBlockFrame();
+	private void winGame(JFrame frmCampoMinado) {
+		flipBlockFrame(frmCampoMinado);
 		BuzzerBiip bepp = new BuzzerBiip();
 		bepp.playWin();
 		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.winGame(this.gameSecreen.getFrmCampoMinado());
-		flipBlockFrame();
+		gameMessages.winGame(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
 	}
 
-	public void restartGame() {
-		flipBlockFrame();
+	public void restartGame(JFrame frmCampoMinado) {
+		flipBlockFrame(frmCampoMinado);
 		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.restartGame(this.gameSecreen.getFrmCampoMinado());
-		flipBlockFrame();
+		gameMessages.restartGame(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
 	}
 
-	public void closeWindow() {
-		flipBlockFrame();
+	public void closeWindow(JFrame frmCampoMinado) {
+		flipBlockFrame(frmCampoMinado);
 		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.closeWindow(this.gameSecreen.getFrmCampoMinado());
-		flipBlockFrame();
+		gameMessages.closeWindow(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
 	}
 
-	public void loseGame() {
-		flipBlockFrame();
+	public void loseGame(JFrame frmCampoMinado, FieldSquare[][] field) {
+		flipBlockFrame(frmCampoMinado);
 		BuzzerBiip bepp = new BuzzerBiip();
 		bepp.playLose();
-		FieldSquare[][] field = this.gameSecreen.getField();
 
 		for (FieldSquare[] i : field)
 			for (FieldSquare j : i)
 				openPanel(j);
 
 		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.loseGame(this.gameSecreen.getFrmCampoMinado());
-		flipBlockFrame();
+		gameMessages.loseGame(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
 
 	}
 
@@ -187,11 +178,11 @@ public class CtrGame {
 		bepp.playStart();
 	}
 
-	public void helpWindow() {
-		flipBlockFrame();
+	public void helpWindow(JFrame frmCampoMinado) {
+		flipBlockFrame(frmCampoMinado);
 		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.helpWindow(this.gameSecreen.getFrmCampoMinado());
-		flipBlockFrame();
+		gameMessages.helpWindow(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
 	}
 
 }

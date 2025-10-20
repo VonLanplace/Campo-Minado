@@ -9,15 +9,15 @@ public class MainButtons extends JButton {
 
 	public MainButtons(String text) {
 		super(text);
-		confiButton();
+		configButton();
 	}
 
 	public MainButtons() {
 		super();
-		confiButton();
+		configButton();
 	}
 
-	private void confiButton() {
+	private void configButton() {
 		// Define tamanho preferido para ser quadrado pequeno
 		this.setPreferredSize(new Dimension(200, 200));
 
