@@ -1,23 +1,27 @@
 package controller;
 
 import java.awt.CardLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import view.FieldSquare;
 import view.GameMessages;
+import view.GameSecreen;
 
 public class CtrGame {
-	private int difficulty;
+	private int sideSize;
 	private int minesQtd;
 	private int markedQtd;
 
-	public CtrGame(int difficulty) {
+	public CtrGame(int sideSize) {
 		super();
-		this.difficulty = difficulty;
-		this.minesQtd = difficulty * (difficulty / 5);
+		this.sideSize = sideSize;
+		this.minesQtd = sideSize * (sideSize / 5);
 		this.markedQtd = 0;
 	}
 
@@ -63,6 +67,43 @@ public class CtrGame {
 		}
 	}
 
+	public FieldSquare[][] generateButtons(JFrame frmCampoMinado, JLabel markedMines, JLabel totalMines) {
+		CtrCampo field = new CtrCampo(this.sideSize, this.minesQtd);
+		FieldSquare[][] buttons = new FieldSquare[this.sideSize][this.sideSize];
+
+		for (int i = 0; i < this.sideSize; i++)
+			for (int j = 0; j < this.sideSize; j++)
+				buttons[i][j] = new FieldSquare(field.getSquare(i, j), this, frmCampoMinado, buttons, markedMines,
+						totalMines);
+
+		// Apresentar os vizinhos
+		for (int i = 0; i < this.sideSize; i++) {
+			for (int j = 0; j < this.sideSize; j++) {
+				ArrayList<FieldSquare> vizinhos = new ArrayList<FieldSquare>();
+
+				for (int k = -1; k < 2; k++) {
+					for (int l = -1; l < 2; l++) {
+						int x = i + k, y = j + l;
+
+						if (x >= 0 && x < this.sideSize) {
+							if (y >= 0 && y < this.sideSize) {
+								if (x == i && y == j) {
+								} else {
+									vizinhos.add(buttons[x][y]);
+								}
+							}
+						}
+					}
+				}
+
+				buttons[i][j].setVizinhos(vizinhos);
+			}
+		}
+
+		System.out.println(field.toString());
+		return buttons;
+	}
+
 	public void count(JLabel markedMines, JLabel totalMines) {
 
 		totalMines.setText(Integer.toString(this.minesQtd - this.markedQtd));
@@ -83,50 +124,6 @@ public class CtrGame {
 		count(markedMines, totalMines);
 	}
 
-	public FieldSquare[][] generateButtons() {
-		CtrCampo field = new CtrCampo(this.difficulty, this.minesQtd);
-		FieldSquare[][] buttons = new FieldSquare[this.difficulty][this.difficulty];
-
-		for (int i = 0; i < this.difficulty; i++)
-			for (int j = 0; j < this.difficulty; j++)
-				buttons[i][j] = new FieldSquare(field.getSquare(i, j), this);
-
-		// Apresentar os vizinhos
-		for (int i = 0; i < this.difficulty; i++) {
-			for (int j = 0; j < this.difficulty; j++) {
-				ArrayList<FieldSquare> vizinhos = new ArrayList<FieldSquare>();
-
-				for (int k = -1; k < 2; k++) {
-					for (int l = -1; l < 2; l++) {
-						int x = i + k, y = j + l;
-
-						if (x >= 0 && x < this.difficulty) {
-							if (y >= 0 && y < this.difficulty) {
-								if (x == i && y == j) {
-									// System.out.println("no" + x + "|" + y);
-								} else {
-									// System.out.println("in" + x + "|" + y);
-									vizinhos.add(buttons[x][y]);
-								}
-							}
-						}
-					}
-				}
-
-				/*
-				 * for (int k = 0; k < vizinhos.size(); k++) {
-				 * System.out.print(vizinhos.get(k).getValueSquare()); System.out.print(","); }
-				 * 
-				 * System.out.println();
-				 */
-				buttons[i][j].setVizinhos(vizinhos);
-			}
-		}
-
-		System.out.println(field.toString());
-		return buttons;
-	}
-
 	private void flipBlockFrame(JFrame frmCampoMinado) {
 		if (frmCampoMinado.isEnabled()) {
 			frmCampoMinado.setEnabled(false);
@@ -135,26 +132,47 @@ public class CtrGame {
 		}
 	}
 
+	public void helpWindow(JFrame frmCampoMinado) {
+		flipBlockFrame(frmCampoMinado);
+		GameMessages gameMessages = new GameMessages();
+		gameMessages.helpWindow(frmCampoMinado);
+		flipBlockFrame(frmCampoMinado);
+	}
+
 	private void winGame(JFrame frmCampoMinado) {
 		flipBlockFrame(frmCampoMinado);
 		BuzzerBiip bepp = new BuzzerBiip();
 		bepp.playWin();
-		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.winGame(frmCampoMinado);
+		GameMessages gameMessages = new GameMessages();
+		int opc = gameMessages.winGame(frmCampoMinado);
+
+		if (opc == JOptionPane.NO_OPTION)
+			frmCampoMinado.dispose();
+		else
+			newGame(frmCampoMinado);
+
 		flipBlockFrame(frmCampoMinado);
 	}
 
 	public void restartGame(JFrame frmCampoMinado) {
 		flipBlockFrame(frmCampoMinado);
-		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.restartGame(frmCampoMinado);
+		GameMessages gameMessages = new GameMessages();
+		int opc = gameMessages.restartGame(frmCampoMinado);
+
+		if (opc != JOptionPane.CANCEL_OPTION)
+			newGame(frmCampoMinado);
+
 		flipBlockFrame(frmCampoMinado);
 	}
 
 	public void closeWindow(JFrame frmCampoMinado) {
 		flipBlockFrame(frmCampoMinado);
-		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.closeWindow(frmCampoMinado);
+		GameMessages gameMessages = new GameMessages();
+		int opc = gameMessages.closeWindow(frmCampoMinado);
+
+		if (opc == JOptionPane.OK_OPTION || opc == JOptionPane.YES_OPTION)
+			frmCampoMinado.dispose();
+
 		flipBlockFrame(frmCampoMinado);
 	}
 
@@ -165,24 +183,41 @@ public class CtrGame {
 
 		for (FieldSquare[] i : field)
 			for (FieldSquare j : i)
-				openPanel(j);
+				if (j.getValueSquare() < 0)
+					openPanel(j);
 
-		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.loseGame(frmCampoMinado);
+		GameMessages gameMessages = new GameMessages();
+		int opc = gameMessages.loseGame(frmCampoMinado);
+
+		if (opc == JOptionPane.NO_OPTION)
+			frmCampoMinado.dispose();
+		else
+			newGame(frmCampoMinado);
+
 		flipBlockFrame(frmCampoMinado);
+	}
 
+	private void newGame(JFrame frmCampoMinado) {
+		System.out.println(this.sideSize);
+		// Load Window
+		frmCampoMinado.setVisible(false);
+		CtrMain ctrMain = new CtrMain();
+		GameSecreen gameSecreen = ctrMain.createGameScreen(this.sideSize / 5);
+		JFrame newWindow = gameSecreen.getFrmCampoMinado();
+
+		newWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				frmCampoMinado.dispose();
+			}
+		});
+
+		newWindow.setVisible(true);
 	}
 
 	public void playStart() {
 		BuzzerBiip bepp = new BuzzerBiip();
 		bepp.playStart();
-	}
-
-	public void helpWindow(JFrame frmCampoMinado) {
-		flipBlockFrame(frmCampoMinado);
-		GameMessages gameMessages = new GameMessages(difficulty);
-		gameMessages.helpWindow(frmCampoMinado);
-		flipBlockFrame(frmCampoMinado);
 	}
 
 }

@@ -55,7 +55,7 @@ public class GameSecreen {
 	private int windowHeigth;
 
 	public GameSecreen(int fieldSize, int windowLength, int windowHeigth) {
-		this.ctrGame = new CtrGame(this, fieldSize);
+		this.ctrGame = new CtrGame(fieldSize);
 		this.windowLength = windowLength;
 		this.windowHeigth = windowHeigth;
 		this.ctrGame.playStart();
@@ -65,9 +65,13 @@ public class GameSecreen {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private JLabel MarkedMines;
+	private JLabel markedMines;
 	private JLabel totalMines;
 	private FieldSquare[][] field;
+
+	public void reInitializa(int fieldSize) {
+		initialize(fieldSize);
+	}
 
 	private void initialize(int fieldSize) {
 		frmCampoMinado = new JFrame();
@@ -98,7 +102,7 @@ public class GameSecreen {
 		JButton BtnNew = new JButton(" Reset ");
 		BtnNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ctrGame.restartGame();
+				ctrGame.restartGame(frmCampoMinado);
 			}
 		});
 		BtnNew.setMargin(new Insets(0, 0, 0, 0));
@@ -107,7 +111,7 @@ public class GameSecreen {
 		JButton btnMainMenu = new JButton(" Menu ");
 		btnMainMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ctrGame.closeWindow();
+				ctrGame.closeWindow(frmCampoMinado);
 			}
 		});
 		btnMainMenu.setMargin(new Insets(0, 0, 0, 0));
@@ -116,7 +120,7 @@ public class GameSecreen {
 		JButton btnHelp = new JButton("Help");
 		btnHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ctrGame.helpWindow();
+				ctrGame.helpWindow(frmCampoMinado);
 			}
 		});
 		btnHelp.setMargin(new Insets(0, 0, 0, 0));
@@ -154,9 +158,9 @@ public class GameSecreen {
 		panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		topInfo.add(panel_1);
 
-		MarkedMines = new JLabel();
-		MarkedMines.setText("0");
-		panel_1.add(MarkedMines);
+		markedMines = new JLabel();
+		markedMines.setText("0");
+		panel_1.add(markedMines);
 
 		JSeparator separator_1 = new JSeparator();
 		frmCampoMinado.getContentPane().add(separator_1, BorderLayout.SOUTH);
@@ -165,7 +169,7 @@ public class GameSecreen {
 		frmCampoMinado.getContentPane().add(Center, BorderLayout.CENTER);
 		Center.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		field = this.ctrGame.generateButtons();
+		field = this.ctrGame.generateButtons(frmCampoMinado, markedMines, totalMines);
 
 		for (int i = 0; i < fieldSize; i++) {
 			for (int j = 0; j < fieldSize; j++) {
@@ -203,11 +207,11 @@ public class GameSecreen {
 	}
 
 	public JLabel getMarkedMines() {
-		return MarkedMines;
+		return markedMines;
 	}
 
 	public void setMarkedMines(JLabel markedMines) {
-		MarkedMines = markedMines;
+		this.markedMines = markedMines;
 	}
 
 	public JLabel getTotalMines() {

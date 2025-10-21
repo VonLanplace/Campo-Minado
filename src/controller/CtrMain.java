@@ -21,7 +21,7 @@ public class CtrMain {
 		GameSecreen gameSecreen = createGameScreen(dificulty); // Configuração do tutorial
 		JFrame tutorialFrame = gameSecreen.getFrmCampoMinado();
 
-		// Adiciona listener para quando o tutorial fechar
+		// Adiciona listener para quando fechar
 		tutorialFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
