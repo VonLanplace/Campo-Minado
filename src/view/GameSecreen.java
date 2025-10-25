@@ -25,7 +25,7 @@ import model.MarkedIcon;
 public class GameSecreen {
 	private JFrame frmCampoMinado;
 
-	private CtrGame ctrGame;
+	private final CtrGame ctrGame;
 
 	/**
 	 * Launch the application.
@@ -51,8 +51,8 @@ public class GameSecreen {
 	/**
 	 * Create the application.
 	 */
-	private int windowLength;
-	private int windowHeigth;
+	private final int windowLength;
+	private final int windowHeigth;
 
 	public GameSecreen(int fieldSize, int windowLength, int windowHeigth) {
 		this.ctrGame = new CtrGame(fieldSize);
