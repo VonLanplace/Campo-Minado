@@ -11,7 +11,7 @@ public class MarkedIcon extends MarkedButton {
 	private static final long serialVersionUID = -750567282211668078L;
 
 	public MarkedIcon(String text) {
-		super(null, null);
+		super(null, null, null, null, null, null);
 		MarkedIcon button = this;
 
 		// Remove listeners of a specific class type

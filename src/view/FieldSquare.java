@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -19,31 +20,31 @@ public class FieldSquare extends JPanel {
 	private MineButton mineButton;
 	private MarkedButton markedButton;
 	private JLabel label;
-	private CtrGame ctrGame;
 
 	private int valueSquare;
-	private int isOpen;
-	private int isMarked;
+	private boolean isOpen;
+	private boolean isMarked;
 
 	private ArrayList<FieldSquare> vizinhos;
 
 	/*
 	 * Fonte Padrao btnNewButton_1.setFont(new Font("Dialog", Font.BOLD, 14));
 	 */
-	public FieldSquare(int valueSquare, CtrGame ctrGame) {
+	public FieldSquare(int valueSquare, CtrGame ctrGame, JFrame frame, FieldSquare[][] fieldSquares, JLabel markedMines,
+			JLabel totalMines) {
 		super();
 		this.valueSquare = valueSquare;
-		this.isOpen = 0;
-		this.ctrGame = ctrGame;
+		this.isOpen = false;
+		this.isMarked = false;
 
 		FieldSquare panel = this;
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setLayout(new CardLayout(0, 0));
 
-		this.markedButton = new MarkedButton(panel, ctrGame);
+		this.markedButton = new MarkedButton(panel, ctrGame, frame, fieldSquares, markedMines, totalMines);
 		panel.add(markedButton);
 
-		this.mineButton = new MineButton("", panel, ctrGame);
+		this.mineButton = new MineButton("", panel, ctrGame, frame, fieldSquares, markedMines, totalMines);
 		panel.add(mineButton);
 
 		CardLayout cl = (CardLayout) panel.getLayout();
@@ -73,35 +74,30 @@ public class FieldSquare extends JPanel {
 	}
 
 	public boolean isOpen() {
-		if (this.isOpen == 0)
-			return false;
-		else
-			return true;
+		return this.isOpen;
 	}
 
 	public void setOpen(boolean open) {
 		if (open) {
-			this.isOpen = 1;
+			this.isOpen = true;
 		} else {
-			this.isOpen = 0;
+			this.isOpen = false;
 		}
 	}
 
 	public boolean isMarked() {
-		if (this.isMarked == 0)
-			return false;
-		else
-			return true;
+		return this.isMarked;
+	}
+
+	public void setMarked(boolean marked) {
+		this.isMarked = marked;
 	}
 
 	public void flipMarked() {
-		if (this.isMarked == 0) {
-			this.ctrGame.countMarked();
-			this.isMarked = 1;
-		} else {
-			this.ctrGame.countUnmarked();
-			this.isMarked = 0;
-		}
+		if (this.isMarked)
+			this.isMarked = false;
+		else
+			this.isMarked = true;
 	}
 
 	public void nextCard() {
