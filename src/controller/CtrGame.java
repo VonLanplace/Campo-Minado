@@ -100,7 +100,7 @@ public class CtrGame {
 			}
 		}
 
-		System.out.println(field.toString());
+		// System.out.println(field.toString());
 		return buttons;
 	}
 
